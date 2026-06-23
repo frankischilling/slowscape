@@ -3,31 +3,28 @@ plugins {
 }
 
 repositories {
-	mavenCentral()
-
+	mavenLocal()
 	maven {
 		url = 'https://repo.runelite.net'
 		content {
 			includeGroupByRegex("net\\.runelite.*")
 		}
 	}
-
-	// Only enable this if you truly need local published artifacts.
-	// mavenLocal()
+	mavenCentral()
 }
 
 def runeLiteVersion = 'latest.release'
 def pluginMainClass = 'com.slowscape.SlowScapePluginTest'
 
 dependencies {
-	compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
+	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
 
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 	testImplementation 'junit:junit:4.12'
-	testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
-	testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
+	testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
+	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
 group = 'com.slowscape'
@@ -47,16 +44,11 @@ tasks.register('run', JavaExec) {
 
 tasks.register('shadowJar', Jar) {
 	dependsOn configurations.testRuntimeClasspath
-
 	manifest {
-		attributes(
-				'Main-Class': pluginMainClass,
-				'Multi-Release': true
-		)
+		attributes('Main-Class': pluginMainClass, 'Multi-Release': true)
 	}
 
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
 	from sourceSets.main.output
 	from sourceSets.test.output
 	from {
